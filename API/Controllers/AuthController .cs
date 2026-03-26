@@ -22,20 +22,31 @@ namespace API.Controllers
 
             if (request.Email == "admin@test.com" && request.Password == "password123")
             {
-                permissions.AddRange(new[] { "view_products", "add_products" });//adds the permission before generating the token for authentication
+                permissions.AddRange(new[] { "view_products", "add_products", "edit_products", "delete_products" });//adds the permission before generating the token for authentication
 
-                var token = GenerateJwtToken(request.Email, permissions);
+            }
+            else if (request.Email == "view@test.com" && request.Password == "password123")
+            {
+                permissions.AddRange(new[] { "view_products", "add_products"});//adds the permission before generating the token for authentication
 
-                return Ok(new
-                {
-                    token = token,
-                    email = request.Email
-                });
+            }
+            else if (request.Email == "viewedit@test.com" && request.Password == "password123")
+            {
+                permissions.AddRange(new[] { "view_products", "add_products","edit_products" });//adds the permission before generating the token for authentication
+
             }
             else
             {
                 return Unauthorized();
             }
+
+            var token = GenerateJwtToken(request.Email, permissions);
+
+            return Ok(new
+            {
+                token = token,
+                email = request.Email
+            });
         }
 
         private string GenerateJwtToken(string email, List<string> permissions)
